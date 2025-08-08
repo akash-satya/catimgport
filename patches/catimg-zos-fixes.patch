@@ -1,0 +1,37 @@
+diff --git a/src/catimg.c b/src/catimg.c
+index abc123..def456 100644  # Adjust indices if needed; this is illustrative
+--- a/src/catimg.c
++++ b/src/catimg.c
+@@ -1,5 +1,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <unistd.h>  // For usleep
+ #include "stb_image.h"
+ 
+ // ... (other includes)
+@@ -53,12 +54,12 @@
+ int is_utf8(void) {
+-    const char* LC_ALL = getenv("LC_ALL");
++    const char* lc_all_env = getenv("LC_ALL");
+     const char* LANG = getenv("LANG");
+-    const char* LC_CTYPE = getenv("LC_CTYPE");
++    const char* lc_ctype_env = getenv("LC_CTYPE");
+     const char* UTF = "UTF-8";
+ 
+-    return (LC_ALL && strstr(LC_ALL, UTF))
++    return (lc_all_env && strstr(lc_all_env, UTF))
+         || (LANG && strstr(LANG, UTF))
+-        || (LC_CTYPE && strstr(LC_CTYPE, UTF));
++        || (lc_ctype_env && strstr(lc_ctype_env, UTF));
+ }
+ 
+ // ... (rest of file unchanged)
+@@ -178,7 +179,7 @@
+                 printf("\x1b[%dA", img.height / 2);
+                 fflush(stdout);
+-                usleep(img.delays[frame - 1] * 10000);
++                usleep((useconds_t)(img.delays[frame - 1] * 10000));  // Cast for type safety
+             }
+         }
+     }
+
